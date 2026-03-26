@@ -17,34 +17,36 @@ export function IncidentItem({
   return (
     <div
       onClick={onClick}
-      className={`p-4 border-l-4 cursor-pointer transition-all ${
+      className={`p-3 cursor-pointer transition-all rounded-lg ${
         isSelected
-          ? 'bg-blue-50 border-blue-400 shadow-md'
-          : 'bg-white border-gray-200 hover:bg-gray-50'
+          ? 'bg-orange-50 border-l-4 border-orange-500'
+          : 'bg-white border border-gray-200 hover:border-gray-300'
       }`}
     >
-      <div className="flex items-start justify-between mb-2">
-        <h3 className="font-semibold text-gray-900 flex-1 line-clamp-2">
+      <div className="flex items-start justify-between gap-2 mb-2">
+        <h3 className="font-semibold text-gray-900 flex-1 line-clamp-2 text-sm">
           {incident.title}
         </h3>
       </div>
 
-      <div className="flex items-center gap-2 mb-2 flex-wrap">
-        <span className={`inline-block px-2 py-1 text-xs font-medium rounded border ${getSeverityBadgeColor(incident.severity)} bg-white`}>
+      <div className="flex items-center gap-2 mb-3 flex-wrap">
+        <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded border ${getSeverityBadgeColor(incident.severity)}`}>
           {getSeverityLabel(incident.severity)}
         </span>
         <span
-          className={`inline-block px-2 py-1 text-xs font-medium rounded border ${getStatusColor(
+          className={`inline-flex px-2 py-1 text-xs font-semibold rounded border ${getStatusColor(
             incident.status
           )}`}
         >
           {getStatusLabel(incident.status)}
         </span>
+        <span className="inline-flex px-2 py-1 text-xs font-medium rounded bg-gray-50 text-gray-700 border border-gray-200">
+          {incident.service}
+        </span>
       </div>
 
-      <div className="flex items-center justify-between text-sm text-gray-600">
-        <span>{incident.service}</span>
-        <span>{formatDistanceToNow(new Date(incident.updatedAt), { addSuffix: true })}</span>
+      <div className="flex items-center justify-between text-xs text-gray-500">
+        <span className="font-medium">{formatDistanceToNow(new Date(incident.updatedAt), { addSuffix: true })}</span>
       </div>
     </div>
   )

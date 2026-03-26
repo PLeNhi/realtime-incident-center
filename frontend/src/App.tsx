@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useIncidentStore } from '@/store'
 import { useSocketConnection } from '@/hooks/useSocketConnection'
 import { fetchIncidents, acknowledgeIncident, resolveIncident } from '@/api'
@@ -7,7 +7,7 @@ import { StatsCards } from '@/components/StatsCards'
 import { FilterBar } from '@/components/FilterBar'
 import { IncidentItem } from '@/components/IncidentItem'
 import { IncidentDetail } from '@/components/IncidentDetail'
-import { EventFeed } from '@/components/EventFeed'
+// import { EventFeed } from '@/components/EventFeed'
 
 export function App() {
   const {
@@ -75,7 +75,7 @@ export function App() {
   }
 
   return (
-    <div className="flex flex-col h-screen bg-gray-50">
+    <div className="flex flex-col h-screen bg-white">
       <Header />
 
       <StatsCards />
@@ -88,7 +88,7 @@ export function App() {
 
       <div className="flex-1 flex flex-col lg:flex-row min-h-0">
         {/* Left: Incident List */}
-        <div className="w-full lg:w-1/3 flex flex-col border-r border-gray-200 bg-gray-50">
+        <div className="w-full lg:w-1/3 flex flex-col border-r border-gray-200 bg-white">
           <FilterBar />
 
           <div className="flex-1 overflow-y-auto">
@@ -118,7 +118,7 @@ export function App() {
             )}
           </div>
 
-          <EventFeed />
+          {/* <EventFeed /> */}
         </div>
 
         {/* Right: Incident Detail */}

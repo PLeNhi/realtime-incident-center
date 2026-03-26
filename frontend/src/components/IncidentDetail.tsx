@@ -18,8 +18,10 @@ export function IncidentDetail({
 }: IncidentDetailProps) {
   if (!incident) {
     return (
-      <div className="flex items-center justify-center h-full text-gray-500">
-        <p>Select an incident to view details</p>
+      <div className="flex items-center justify-center h-full bg-white">
+        <div className="text-center">
+          <p className="text-gray-500 text-sm">Select an incident to view details</p>
+        </div>
       </div>
     )
   }
@@ -30,16 +32,16 @@ export function IncidentDetail({
   return (
     <div className="flex flex-col h-full bg-white">
       {/* Header */}
-      <div className="border-b border-gray-200 p-6">
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">
+      <div className="border-b border-gray-200 p-6 bg-white">
+        <h2 className="text-xl font-bold text-gray-900 mb-3">
           {incident.title}
         </h2>
-        <div className="flex items-center gap-3 flex-wrap">
-          <span className={`inline-block px-3 py-1 text-sm font-medium rounded border ${getSeverityBadgeColor(incident.severity)} bg-white`}>
+        <div className="flex items-center gap-2 flex-wrap">
+          <span className={`inline-flex px-2.5 py-1 text-xs font-semibold rounded border ${getSeverityBadgeColor(incident.severity)}`}>
             {getSeverityLabel(incident.severity)}
           </span>
           <span
-            className={`inline-block px-3 py-1 text-sm font-medium rounded border ${getStatusColor(
+            className={`inline-flex px-2.5 py-1 text-xs font-semibold rounded border ${getStatusColor(
               incident.status
             )}`}
           >
@@ -52,74 +54,72 @@ export function IncidentDetail({
       <div className="flex-1 overflow-y-auto p-6 space-y-6">
         {/* Description */}
         <div>
-          <h3 className="font-semibold text-gray-900 mb-2">Description</h3>
-          <p className="text-gray-700 leading-relaxed">{incident.description}</p>
+          <h3 className="text-sm font-semibold text-gray-900 mb-2 uppercase tracking-wide">Description</h3>
+          <p className="text-sm text-gray-700 leading-relaxed">{incident.description}</p>
         </div>
 
         {/* Details Grid */}
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 gap-4 pb-4 border-b border-gray-200">
           <div>
-            <p className="text-sm text-gray-600 mb-1">Service</p>
-            <p className="font-medium text-gray-900">{incident.service}</p>
+            <p className="text-xs font-semibold text-gray-600 mb-1 uppercase tracking-wide">Service</p>
+            <p className="text-sm font-medium text-gray-900">{incident.service}</p>
           </div>
           <div>
-            <p className="text-sm text-gray-600 mb-1">Severity</p>
-            <p className="font-medium text-gray-900">
+            <p className="text-xs font-semibold text-gray-600 mb-1 uppercase tracking-wide">Severity</p>
+            <p className="text-sm font-medium text-gray-900">
               {getSeverityLabel(incident.severity)}
             </p>
           </div>
           <div>
-            <p className="text-sm text-gray-600 mb-1">Status</p>
-            <p className="font-medium text-gray-900">
+            <p className="text-xs font-semibold text-gray-600 mb-1 uppercase tracking-wide">Status</p>
+            <p className="text-sm font-medium text-gray-900">
               {getStatusLabel(incident.status)}
             </p>
           </div>
           {incident.owner && (
             <div>
-              <p className="text-sm text-gray-600 mb-1">Owner</p>
-              <p className="font-medium text-gray-900">{incident.owner}</p>
+              <p className="text-xs font-semibold text-gray-600 mb-1 uppercase tracking-wide">Owner</p>
+              <p className="text-sm font-medium text-gray-900">{incident.owner}</p>
             </div>
           )}
         </div>
 
         {/* Timestamps */}
-        <div className="border-t border-gray-200 pt-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <p className="text-sm text-gray-600 mb-1">Created</p>
-              <p className="text-sm text-gray-900">
-                {format(new Date(incident.createdAt), 'MMM d, yyyy HH:mm:ss')}
-              </p>
-            </div>
-            <div>
-              <p className="text-sm text-gray-600 mb-1">Updated</p>
-              <p className="text-sm text-gray-900">
-                {formatDistanceToNow(new Date(incident.updatedAt), {
-                  addSuffix: true,
-                })}
-              </p>
-            </div>
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <p className="text-xs font-semibold text-gray-600 mb-1 uppercase tracking-wide">Created</p>
+            <p className="text-xs text-gray-700">
+              {format(new Date(incident.createdAt), 'MMM d, yyyy HH:mm:ss')}
+            </p>
+          </div>
+          <div>
+            <p className="text-xs font-semibold text-gray-600 mb-1 uppercase tracking-wide">Updated</p>
+            <p className="text-xs text-gray-700">
+              {formatDistanceToNow(new Date(incident.updatedAt), {
+                addSuffix: true,
+              })}
+            </p>
           </div>
         </div>
 
         {/* Metric */}
         {incident.metric && (
-          <div>
-            <p className="text-sm text-gray-600 mb-1">Affected Component</p>
-            <p className="font-medium text-gray-900">{incident.metric}</p>
+          <div className="pt-2">
+            <p className="text-xs font-semibold text-gray-600 mb-1 uppercase tracking-wide">Affected Component</p>
+            <p className="text-sm font-medium text-gray-900">{incident.metric}</p>
           </div>
         )}
       </div>
 
       {/* Actions */}
-      <div className="border-t border-gray-200 p-6 bg-gray-50 flex gap-3">
+      <div className="border-t border-gray-200 p-6 bg-white flex gap-3">
         <button
           onClick={onAcknowledge}
           disabled={!canAcknowledge || isLoading}
-          className={`flex-1 px-4 py-2 rounded font-medium transition ${
+          className={`flex-1 px-4 py-2 rounded-lg font-medium text-sm transition-all ${
             canAcknowledge
-              ? 'bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50'
-              : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+              ? 'bg-orange-500 text-white hover:bg-orange-600 active:bg-orange-700'
+              : 'bg-gray-100 text-gray-400 cursor-not-allowed'
           }`}
         >
           {isLoading ? 'Loading...' : 'Acknowledge'}
@@ -127,10 +127,10 @@ export function IncidentDetail({
         <button
           onClick={onResolve}
           disabled={!canResolve || isLoading}
-          className={`flex-1 px-4 py-2 rounded font-medium transition ${
+          className={`flex-1 px-4 py-2 rounded-lg font-medium text-sm transition-all ${
             canResolve
-              ? 'bg-green-600 text-white hover:bg-green-700 disabled:opacity-50'
-              : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+              ? 'bg-orange-500 text-white hover:bg-orange-600 active:bg-orange-700'
+              : 'bg-gray-100 text-gray-400 cursor-not-allowed'
           }`}
         >
           {isLoading ? 'Loading...' : 'Resolve'}
