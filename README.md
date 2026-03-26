@@ -20,12 +20,16 @@ realtime-incident-center/
 ├── frontend/          # React + Vite frontend
 │   ├── src/
 │   │   ├── api/       # API client and Socket.IO setup
-│   │   ├── components/ # React components
+│   │   ├── components/ # React components (shared, reusable)
 │   │   ├── hooks/     # Custom hooks
 │   │   ├── lib/       # Utilities and helpers
+│   │   ├── pages/     # Page components (DashboardPage, IncidentsPage)
 │   │   ├── store/     # Zustand state management
 │   │   ├── types/     # TypeScript types
-│   │   └── App.tsx    # Main app component
+│   │   ├── main.tsx   # Entry point
+│   │   ├── App.tsx    # Main app with tab navigation
+│   │   └── index.css  # Global styles
+│   ├── public/        # Static assets (logo.svg, favicon.svg)
 │   └── package.json
 ├── backend/           # Express + Socket.IO server
 │   ├── src/
@@ -172,6 +176,41 @@ useEffect(() => {
 - Instant UI feedback with toast notifications
 - Automatic rollback on errors
 - Context-aware button states (disabled when not available)
+
+## 📑 Page Structure & Navigation
+
+The dashboard features a **tab-based navigation system** with two main views:
+
+### 1. Dashboard Page (Default)
+
+- **Purpose**: High-level overview of system health
+- **Components**:
+  - Stats Cards (5 key metrics with icons)
+  - Incident Trend Chart (8-hour visualization)
+  - Incidents by Severity Chart (breakdown)
+  - Quick Stats (response time, resolution rate, P1 count, uptime)
+- **Use case**: Executives, managers, quick status checks
+
+### 2. Incidents Page
+
+- **Purpose**: Deep-dive incident management
+- **Components**:
+  - Incident List (left sidebar with filters and search)
+  - Incident Detail Panel (right sidebar with full details and timeline)
+- **Use case**: DevOps engineers, incident responders, detailed work
+
+### Navigation Tabs
+
+- Located in header below main branding
+- Two tabs: "📊 Dashboard" and "🚨 Incidents"
+- Active tab highlighted in orange with underline
+- Quick keyboard accessibility and visual clarity
+
+### Layout Responsiveness
+
+- **Desktop**: Side-by-side layout (list 1/3, detail 2/3)
+- **Mobile**: Stacked layout with full-width components
+- **Smooth transitions** between pages without losing state
 
 ## 🎨 Design Principles
 

@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { socket } from '@/api'
 import { useIncidentStore } from '@/store'
 import { showInfoToast, showSuccessToast, showErrorToast } from '@/store/toasts'
-import type { Incident, IncidentEvent } from '@/types'
+import type { Incident } from '@/types'
 
 export function useSocketConnection() {
   const { setSocketStatus, addIncident, updateIncident, addEvent, addHighlightedIncident, removeHighlightedIncident } =

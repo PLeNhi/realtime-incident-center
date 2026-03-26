@@ -19,5 +19,6 @@ export interface IncidentEvent {
   type: 'created' | 'acknowledged' | 'resolved' | 'updated'
   incidentId: string
   incidentTitle: string
-  timestamp: string
+  timestamp: string;
+  description: string;
 }

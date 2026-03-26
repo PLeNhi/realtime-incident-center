@@ -12,6 +12,10 @@ interface IncidentStore {
   updateIncident: (incident: Incident) => void
   getIncident: (id: string) => Incident | undefined
   
+  // Loading state
+  loading: boolean
+  setLoading: (loading: boolean) => void
+  
   // Filtering
   searchTerm: string
   setSearchTerm: (term: string) => void
@@ -60,6 +64,9 @@ export const useIncidentStore = create<IncidentStore>((set, get) => ({
       ),
     })),
   getIncident: (id) => get().incidents.find((inc) => inc.id === id),
+
+  loading: true,
+  setLoading: (loading) => set({ loading }),
 
   searchTerm: '',
   setSearchTerm: (term) => set({ searchTerm: term }),
