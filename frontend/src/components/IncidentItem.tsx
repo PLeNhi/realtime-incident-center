@@ -1,7 +1,8 @@
 import React from 'react'
 import type { Incident } from '@/types'
 import { getStatusColor, getStatusLabel, getSeverityLabel, getSeverityBadgeColor } from '@/lib/utils'
-import { formatDistanceToNow } from 'date-fns'
+import { formatCompactRelativeTime } from '@/lib/time'
+import { useIncidentStore } from '@/store'
 
 interface IncidentItemProps {
   incident: Incident
@@ -14,13 +15,18 @@ export function IncidentItem({
   isSelected,
   onClick,
 }: IncidentItemProps) {
+  const { highlightedIncidentIds } = useIncidentStore()
+  const isHighlighted = highlightedIncidentIds.has(incident.id)
+
   return (
     <div
       onClick={onClick}
       className={`p-3 cursor-pointer transition-all rounded-lg ${
         isSelected
           ? 'bg-orange-50 border-l-4 border-orange-500'
-          : 'bg-white border border-gray-200 hover:border-gray-300'
+          : isHighlighted
+            ? 'bg-orange-50 border border-orange-200 animate-pulse'
+            : 'bg-white border border-gray-200 hover:border-gray-300'
       }`}
     >
       <div className="flex items-start justify-between gap-2 mb-2">
@@ -46,7 +52,7 @@ export function IncidentItem({
       </div>
 
       <div className="flex items-center justify-between text-xs text-gray-500">
-        <span className="font-medium">{formatDistanceToNow(new Date(incident.updatedAt), { addSuffix: true })}</span>
+        <span className="font-medium">{formatCompactRelativeTime(incident.updatedAt)}</span>
       </div>
     </div>
   )

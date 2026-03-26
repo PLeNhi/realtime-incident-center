@@ -1,10 +1,12 @@
-import React from 'react'
+import { useIncidentStore } from '@/store'
 import type { Incident } from '@/types'
 import { getStatusColor, getStatusLabel, getSeverityLabel, getSeverityBadgeColor } from '@/lib/utils'
+import { formatRelativeTime } from '@/lib/time'
+import { Timeline } from '@/components/Timeline'
 import { formatDistanceToNow, format } from 'date-fns'
 
 interface IncidentDetailProps {
-  incident: Incident | null
+  incident?: Incident | null
   onAcknowledge?: () => void
   onResolve?: () => void
   isLoading?: boolean
@@ -16,6 +18,8 @@ export function IncidentDetail({
   onResolve,
   isLoading = false,
 }: IncidentDetailProps) {
+  const { events } = useIncidentStore()
+
   if (!incident) {
     return (
       <div className="flex items-center justify-center h-full bg-white">
@@ -28,6 +32,7 @@ export function IncidentDetail({
 
   const canAcknowledge = incident.status === 'open'
   const canResolve = incident.status === 'open' || incident.status === 'acknowledged'
+  const incidentEvents = events.filter(e => e.incidentId === incident.id)
 
   return (
     <div className="flex flex-col h-full bg-white">
@@ -91,6 +96,9 @@ export function IncidentDetail({
             <p className="text-xs text-gray-700">
               {format(new Date(incident.createdAt), 'MMM d, yyyy HH:mm:ss')}
             </p>
+            <p className="text-xs text-gray-500 mt-1">
+              {formatRelativeTime(new Date(incident.createdAt))}
+            </p>
           </div>
           <div>
             <p className="text-xs font-semibold text-gray-600 mb-1 uppercase tracking-wide">Updated</p>
@@ -99,8 +107,19 @@ export function IncidentDetail({
                 addSuffix: true,
               })}
             </p>
+            <p className="text-xs text-gray-500 mt-1">
+              {formatRelativeTime(new Date(incident.updatedAt))}
+            </p>
           </div>
         </div>
+
+        {/* Timeline Section */}
+        {incidentEvents.length > 0 && (
+          <div className="pt-4 border-t border-gray-200">
+            <h3 className="text-sm font-semibold text-gray-900 mb-4 uppercase tracking-wide">Timeline</h3>
+            <Timeline events={incidentEvents} />
+          </div>
+        )}
 
         {/* Metric */}
         {incident.metric && (
@@ -118,7 +137,7 @@ export function IncidentDetail({
           disabled={!canAcknowledge || isLoading}
           className={`flex-1 px-4 py-2 rounded-lg font-medium text-sm transition-all ${
             canAcknowledge
-              ? 'bg-orange-500 text-white hover:bg-orange-600 active:bg-orange-700'
+              ? 'bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800'
               : 'bg-gray-100 text-gray-400 cursor-not-allowed'
           }`}
         >
@@ -129,7 +148,7 @@ export function IncidentDetail({
           disabled={!canResolve || isLoading}
           className={`flex-1 px-4 py-2 rounded-lg font-medium text-sm transition-all ${
             canResolve
-              ? 'bg-orange-500 text-white hover:bg-orange-600 active:bg-orange-700'
+              ? 'bg-green-600 text-white hover:bg-green-700 active:bg-green-800'
               : 'bg-gray-100 text-gray-400 cursor-not-allowed'
           }`}
         >

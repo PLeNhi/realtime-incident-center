@@ -10,6 +10,8 @@ body {
   margin: 0;
   padding: 0;
   font-family: system-ui, -apple-system, sans-serif;
+  background: linear-gradient(135deg, #faf8f3 0%, #fef5f0 50%, #faf8f3 100%);
+  background-attachment: fixed;
 }
 
 html {
@@ -33,4 +35,9 @@ html {
 
 ::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
+}
+
+/* Subtle focus ring for accessibility */
+:focus-visible {
+  @apply outline-2 outline-offset-2 outline-orange-500;
 }

@@ -7,6 +7,11 @@ import { StatsCards } from '@/components/StatsCards'
 import { FilterBar } from '@/components/FilterBar'
 import { IncidentItem } from '@/components/IncidentItem'
 import { IncidentDetail } from '@/components/IncidentDetail'
+import { ToastContainer } from '@/components/ToastContainer'
+import { IncidentTrendChart } from '@/components/IncidentTrendChart'
+import { IncidentBySeverityChart } from '@/components/IncidentBySeverityChart'
+import { showSuccessToast, showErrorToast } from '@/store/toasts'
+import { generateTrendData, generateSeverityData } from '@/lib/charts'
 // import { EventFeed } from '@/components/EventFeed'
 
 export function App() {
@@ -17,6 +22,7 @@ export function App() {
     getFilteredIncidents,
     getIncident,
     updateIncident,
+    incidents,
   } = useIncidentStore()
 
   const [loading, setLoading] = useState(true)
@@ -43,6 +49,16 @@ export function App() {
     loadIncidents()
   }, [setIncidents])
 
+  // Force re-render every 30 seconds to update relative times
+  const [, setTimeUpdate] = useState<number>(0)
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTimeUpdate(t => t + 1)
+    }, 30000) // 30 seconds
+
+    return () => clearInterval(interval)
+  }, [])
+
   const filteredIncidents = getFilteredIncidents()
   const selectedIncident = selectedIncidentId
     ? getIncident(selectedIncidentId)
@@ -50,11 +66,22 @@ export function App() {
 
   const handleAcknowledge = async () => {
     if (!selectedIncident) return
+
+    const originalIncident = selectedIncident
+    const optimisticIncident = { ...selectedIncident, status: 'acknowledged' as const }
+
+    // Optimistically update UI
+    updateIncident(optimisticIncident)
     setActionLoading(true)
+
     try {
       const updated = await acknowledgeIncident(selectedIncident.id)
       updateIncident(updated)
+      showSuccessToast('Incident acknowledged')
     } catch (err) {
+      // Rollback on error
+      updateIncident(originalIncident)
+      showErrorToast('Failed to acknowledge incident')
       console.error('Failed to acknowledge:', err)
     } finally {
       setActionLoading(false)
@@ -63,11 +90,22 @@ export function App() {
 
   const handleResolve = async () => {
     if (!selectedIncident) return
+
+    const originalIncident = selectedIncident
+    const optimisticIncident = { ...selectedIncident, status: 'resolved' as const }
+
+    // Optimistically update UI
+    updateIncident(optimisticIncident)
     setActionLoading(true)
+
     try {
       const updated = await resolveIncident(selectedIncident.id)
       updateIncident(updated)
+      showSuccessToast('Incident resolved')
     } catch (err) {
+      // Rollback on error
+      updateIncident(originalIncident)
+      showErrorToast('Failed to resolve incident')
       console.error('Failed to resolve:', err)
     } finally {
       setActionLoading(false)
@@ -75,7 +113,7 @@ export function App() {
   }
 
   return (
-    <div className="flex flex-col h-screen bg-white">
+    <div className="flex flex-col h-screen bg-amber-50">
       <Header />
 
       <StatsCards />
@@ -83,6 +121,16 @@ export function App() {
       {error && (
         <div className="px-6 py-4 bg-red-50 border-b border-red-200">
           <p className="text-sm text-red-800">{error}</p>
+        </div>
+      )}
+
+      {/* Charts Section */}
+      {!loading && incidents.length > 0 && (
+        <div className="px-6 py-4 border-b border-gray-200 bg-amber-50">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <IncidentTrendChart data={generateTrendData(incidents)} />
+            <IncidentBySeverityChart data={generateSeverityData(incidents)} />
+          </div>
         </div>
       )}
 
@@ -131,6 +179,8 @@ export function App() {
           />
         </div>
       </div>
+
+      <ToastContainer />
     </div>
   )
 }

@@ -1,5 +1,9 @@
 import { create } from 'zustand'
 import type { Incident, IncidentStatus, Severity, IncidentEvent } from '@/types'
+import { orderBySeverity, orderByStatus } from '@/lib/time'
+
+export type SocketStatus = 'connected' | 'reconnecting' | 'disconnected'
+export type SortOption = 'latest-updated' | 'newest-created' | 'severity' | 'status'
 
 interface IncidentStore {
   incidents: Incident[]
@@ -17,8 +21,9 @@ interface IncidentStore {
   setStatusFilter: (status: IncidentStatus | null) => void
   serviceFilter: string | null
   setServiceFilter: (service: string | null) => void
-  sortBy: 'latest' | 'oldest'
-  setSortBy: (sort: 'latest' | 'oldest') => void
+  sortBy: SortOption
+  setSortBy: (sort: SortOption) => void
+  clearFilters: () => void
   
   // Filtering helpers
   getFilteredIncidents: () => Incident[]
@@ -27,6 +32,9 @@ interface IncidentStore {
   // UI state
   selectedIncidentId: string | null
   setSelectedIncidentId: (id: string | null) => void
+  highlightedIncidentIds: Set<string>
+  addHighlightedIncident: (id: string) => void
+  removeHighlightedIncident: (id: string) => void
   
   // Events
   events: IncidentEvent[]
@@ -34,8 +42,8 @@ interface IncidentStore {
   clearEvents: () => void
   
   // Socket state
-  isConnected: boolean
-  setIsConnected: (connected: boolean) => void
+  socketStatus: SocketStatus
+  setSocketStatus: (status: SocketStatus) => void
 }
 
 export const useIncidentStore = create<IncidentStore>((set, get) => ({
@@ -61,8 +69,15 @@ export const useIncidentStore = create<IncidentStore>((set, get) => ({
   setStatusFilter: (status) => set({ statusFilter: status }),
   serviceFilter: null,
   setServiceFilter: (service) => set({ serviceFilter: service }),
-  sortBy: 'latest',
+  sortBy: 'latest-updated',
   setSortBy: (sort) => set({ sortBy: sort }),
+  clearFilters: () =>
+    set({
+      searchTerm: '',
+      severityFilter: null,
+      statusFilter: null,
+      serviceFilter: null,
+    }),
 
   getFilteredIncidents: () => {
     const state = get()
@@ -89,16 +104,21 @@ export const useIncidentStore = create<IncidentStore>((set, get) => ({
       filtered = filtered.filter((inc) => inc.service === state.serviceFilter)
     }
 
-    if (state.sortBy === 'latest') {
+    // Apply sorting
+    if (state.sortBy === 'latest-updated') {
       filtered.sort(
         (a, b) =>
           new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
       )
-    } else {
+    } else if (state.sortBy === 'newest-created') {
       filtered.sort(
         (a, b) =>
-          new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime()
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
       )
+    } else if (state.sortBy === 'severity') {
+      filtered.sort((a, b) => orderBySeverity(a.severity) - orderBySeverity(b.severity))
+    } else if (state.sortBy === 'status') {
+      filtered.sort((a, b) => orderByStatus(a.status) - orderByStatus(b.status))
     }
 
     return filtered
@@ -111,6 +131,18 @@ export const useIncidentStore = create<IncidentStore>((set, get) => ({
 
   selectedIncidentId: null,
   setSelectedIncidentId: (id) => set({ selectedIncidentId: id }),
+  
+  highlightedIncidentIds: new Set(),
+  addHighlightedIncident: (id) =>
+    set((state) => ({
+      highlightedIncidentIds: new Set([...state.highlightedIncidentIds, id]),
+    })),
+  removeHighlightedIncident: (id) =>
+    set((state) => {
+      const newSet = new Set(state.highlightedIncidentIds)
+      newSet.delete(id)
+      return { highlightedIncidentIds: newSet }
+    }),
 
   events: [],
   addEvent: (event) =>
@@ -119,6 +151,6 @@ export const useIncidentStore = create<IncidentStore>((set, get) => ({
     })),
   clearEvents: () => set({ events: [] }),
 
-  isConnected: false,
-  setIsConnected: (connected) => set({ isConnected: connected }),
+  socketStatus: 'disconnected',
+  setSocketStatus: (status) => set({ socketStatus: status }),
 }))

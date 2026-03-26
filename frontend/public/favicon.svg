@@ -1,0 +1,26 @@
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" fill="none">
+  <defs>
+    <linearGradient id="favGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1f2937;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#111827;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="64" height="64" fill="url(#favGrad)"/>
+  
+  <!-- Icon (centered at 32,32) -->
+  <g transform="translate(32, 32)">
+    <!-- Pulse ring 1 -->
+    <circle cx="0" cy="0" r="14" fill="none" stroke="#fb923c" stroke-width="1" opacity="0.25"/>
+    
+    <!-- Pulse ring 2 -->
+    <circle cx="0" cy="0" r="10" fill="none" stroke="#fb923c" stroke-width="1.2" opacity="0.4"/>
+    
+    <!-- Center circle (orange) -->
+    <circle cx="0" cy="0" r="6" fill="#fb923c"/>
+    
+    <!-- Inner dot (white) -->
+    <circle cx="0" cy="0" r="2.5" fill="white"/>
+  </g>
+</svg>

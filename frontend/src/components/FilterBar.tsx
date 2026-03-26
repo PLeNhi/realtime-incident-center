@@ -1,4 +1,4 @@
-import { useIncidentStore } from '@/store'
+import { useIncidentStore, type SortOption } from '@/store'
 import type { Severity, IncidentStatus } from '@/types'
 
 export function FilterBar() {
@@ -13,6 +13,7 @@ export function FilterBar() {
     setServiceFilter,
     sortBy,
     setSortBy,
+    clearFilters,
     getAvailableServices,
     incidents,
   } = useIncidentStore()
@@ -77,11 +78,13 @@ export function FilterBar() {
         {/* Sort */}
         <select
           value={sortBy}
-          onChange={(e) => setSortBy(e.target.value as 'latest' | 'oldest')}
+          onChange={(e) => setSortBy(e.target.value as SortOption)}
           className="px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-400 focus:ring-offset-1 transition-all hover:border-gray-300 bg-white"
         >
-          <option value="latest">Latest First</option>
-          <option value="oldest">Oldest First</option>
+          <option value="latest-updated">Latest Updated</option>
+          <option value="newest-created">Newest Created</option>
+          <option value="severity">Severity</option>
+          <option value="status">Status</option>
         </select>
       </div>
 
@@ -90,12 +93,7 @@ export function FilterBar() {
         <div className="max-w-7xl mx-auto mt-3 flex items-center gap-2 text-sm text-gray-600 pt-3 border-t border-gray-200">
           <span className="text-xs font-semibold">Active filters:</span>
           <button
-            onClick={() => {
-              setSearchTerm('')
-              setSeverityFilter(null)
-              setStatusFilter(null)
-              setServiceFilter(null)
-            }}
+            onClick={() => clearFilters()}
             className="text-orange-600 hover:text-orange-700 text-xs font-medium hover:underline"
           >
             Clear all
