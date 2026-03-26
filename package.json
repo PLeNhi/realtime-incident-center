@@ -1,0 +1,22 @@
+{
+  "name": "realtime-incident-center",
+  "version": "1.0.0",
+  "description": "Real-time incident monitoring dashboard",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "type-check": "turbo run type-check",
+    "frontend": "turbo run dev --filter=realtime-incident-center-frontend",
+    "backend": "turbo run dev --filter=realtime-incident-center-backend",
+    "clean": "turbo clean && rm -rf node_modules"
+  },
+  "devDependencies": {
+    "turbo": "^1.10.16"
+  }
+}

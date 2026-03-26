@@ -1,0 +1,112 @@
+import React from 'react'
+import { useIncidentStore } from '@/store'
+import type { Severity, IncidentStatus } from '@/types'
+
+export function FilterBar() {
+  const {
+    searchTerm,
+    setSearchTerm,
+    severityFilter,
+    setSeverityFilter,
+    statusFilter,
+    setStatusFilter,
+    serviceFilter,
+    setServiceFilter,
+    sortBy,
+    setSortBy,
+    getAvailableServices,
+    incidents,
+  } = useIncidentStore()
+
+  const services = getAvailableServices()
+  const hasActiveFilters =
+    searchTerm || severityFilter || statusFilter || serviceFilter
+
+  return (
+    <div className="bg-white border-b border-gray-200 p-4 space-y-3">
+      <div className="flex flex-col sm:flex-row gap-3">
+        {/* Search */}
+        <input
+          type="text"
+          placeholder="Search incidents..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+
+        {/* Severity Filter */}
+        <select
+          value={severityFilter || ''}
+          onChange={(e) => setSeverityFilter((e.target.value as Severity) || null)}
+          className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          <option value="">All Severities</option>
+          <option value="critical">Critical</option>
+          <option value="high">High</option>
+          <option value="medium">Medium</option>
+          <option value="low">Low</option>
+        </select>
+
+        {/* Status Filter */}
+        <select
+          value={statusFilter || ''}
+          onChange={(e) => setStatusFilter((e.target.value as IncidentStatus) || null)}
+          className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          <option value="">All Statuses</option>
+          <option value="open">Open</option>
+          <option value="acknowledged">Acknowledged</option>
+          <option value="resolved">Resolved</option>
+        </select>
+
+        {/* Service Filter */}
+        {services.length > 0 && (
+          <select
+            value={serviceFilter || ''}
+            onChange={(e) => setServiceFilter(e.target.value || null)}
+            className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="">All Services</option>
+            {services.map((service) => (
+              <option key={service} value={service}>
+                {service}
+              </option>
+            ))}
+          </select>
+        )}
+
+        {/* Sort */}
+        <select
+          value={sortBy}
+          onChange={(e) => setSortBy(e.target.value as 'latest' | 'oldest')}
+          className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          <option value="latest">Latest First</option>
+          <option value="oldest">Oldest First</option>
+        </select>
+      </div>
+
+      {/* Active Filters Display */}
+      {hasActiveFilters && (
+        <div className="flex items-center gap-2 text-sm text-gray-600">
+          <span>Active filters:</span>
+          <button
+            onClick={() => {
+              setSearchTerm('')
+              setSeverityFilter(null)
+              setStatusFilter(null)
+              setServiceFilter(null)
+            }}
+            className="text-blue-600 hover:text-blue-700"
+          >
+            Clear all
+          </button>
+        </div>
+      )}
+
+      {incidents.length === 0 && (
+        <div className="text-sm text-gray-500">No incidents found</div>
+      )}
+    </div>
+  )
+}
