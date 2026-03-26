@@ -198,8 +198,8 @@ interface Incident {
   title: string; // Incident title
   description: string; // Full description
   service: string; // Service name
-  severity: "critical" | "high" | "medium" | "low";
-  status: "open" | "acknowledged" | "resolved";
+  severity: 'critical' | 'high' | 'medium' | 'low';
+  status: 'open' | 'acknowledged' | 'resolved';
   createdAt: string; // ISO timestamp
   updatedAt: string; // ISO timestamp
   owner?: string; // Team/person responsible
@@ -212,7 +212,7 @@ interface Incident {
 ```typescript
 interface IncidentEvent {
   id: string; // Unique ID
-  type: "created" | "acknowledged" | "resolved" | "updated";
+  type: 'created' | 'acknowledged' | 'resolved' | 'updated';
   incidentId: string;
   incidentTitle: string;
   timestamp: string; // ISO timestamp
@@ -228,7 +228,7 @@ interface IncidentEvent {
 #### `incident:created`
 
 ```javascript
-socket.emit("incident:created", incident);
+socket.emit('incident:created', incident);
 // When: New incident generated every 10-30 seconds
 // Payload: Full Incident object
 // Action: AddIncident to store, add Event
@@ -237,7 +237,7 @@ socket.emit("incident:created", incident);
 #### `incident:updated`
 
 ```javascript
-socket.emit("incident:updated", incident);
+socket.emit('incident:updated', incident);
 // When: Incident status changed (acknowledge/resolve)
 // Payload: Full Incident object
 // Action: UpdateIncident in store, add Event

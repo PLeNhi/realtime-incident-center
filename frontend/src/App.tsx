@@ -1,47 +1,49 @@
-import { useEffect, useState } from 'react'
-import { useIncidentStore } from '@/store'
-import { useSocketConnection } from '@/hooks/useSocketConnection'
-import { fetchIncidents } from '@/api'
-import { Header } from '@/components/Header'
-import { ToastContainer } from '@/components/ToastContainer'
-import { DashboardPage } from '@/pages/DashboardPage'
-import { IncidentsPage } from '@/pages/IncidentsPage'
+import { useEffect, useState } from 'react';
+import { useIncidentStore } from '@/store';
+import { useSocketConnection } from '@/hooks/useSocketConnection';
+import { fetchIncidents } from '@/api';
+import { Header } from '@/components/Header';
+import { ToastContainer } from '@/components/ToastContainer';
+import { DashboardPage } from '@/pages/DashboardPage';
+import { IncidentsPage } from '@/pages/IncidentsPage';
 
 export function App() {
-  const { setIncidents, setLoading } = useIncidentStore()
+  const { setIncidents, setLoading } = useIncidentStore();
 
-  const [error, setError] = useState<string | null>(null)
-  const [currentPage, setCurrentPage] = useState<'dashboard' | 'incidents'>('dashboard')
+  const [error, setError] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState<'dashboard' | 'incidents'>(
+    'dashboard',
+  );
 
   // Initialize socket connection
-  useSocketConnection()
+  useSocketConnection();
 
   // Load initial incidents
   useEffect(() => {
     const loadIncidents = async () => {
       try {
-        const incidents = await fetchIncidents()
-        setIncidents(incidents)
+        const incidents = await fetchIncidents();
+        setIncidents(incidents);
       } catch (err) {
-        setError('Failed to load incidents')
-        console.error(err)
+        setError('Failed to load incidents');
+        console.error(err);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
-    loadIncidents()
-  }, [setIncidents, setLoading])
+    loadIncidents();
+  }, [setIncidents, setLoading]);
 
   // Force re-render every 30 seconds to update relative times
-  const [, setTimeUpdate] = useState<number>(0)
+  const [, setTimeUpdate] = useState<number>(0);
   useEffect(() => {
     const interval = setInterval(() => {
-      setTimeUpdate(t => t + 1)
-    }, 30000) // 30 seconds
+      setTimeUpdate((t) => t + 1);
+    }, 30000); // 30 seconds
 
-    return () => clearInterval(interval)
-  }, [])
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <div className="flex flex-col h-screen bg-amber-50">
@@ -81,14 +83,10 @@ export function App() {
 
       {/* Page Content */}
       <div className="flex-1 overflow-hidden">
-        {currentPage === 'dashboard' ? (
-          <DashboardPage />
-        ) : (
-          <IncidentsPage />
-        )}
+        {currentPage === 'dashboard' ? <DashboardPage /> : <IncidentsPage />}
       </div>
 
       <ToastContainer />
     </div>
-  )
+  );
 }

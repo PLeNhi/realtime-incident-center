@@ -1,10 +1,10 @@
-import { useState } from 'react'
-import { useIncidentStore } from '@/store'
-import { FilterBar } from '@/components/FilterBar'
-import { IncidentItem } from '@/components/IncidentItem'
-import { IncidentDetail } from '@/components/IncidentDetail'
-import { showSuccessToast, showErrorToast } from '@/store/toasts'
-import { acknowledgeIncident, resolveIncident } from '@/api'
+import { useState } from 'react';
+import { useIncidentStore } from '@/store';
+import { FilterBar } from '@/components/FilterBar';
+import { IncidentItem } from '@/components/IncidentItem';
+import { IncidentDetail } from '@/components/IncidentDetail';
+import { showSuccessToast, showErrorToast } from '@/store/toasts';
+import { acknowledgeIncident, resolveIncident } from '@/api';
 
 export function IncidentsPage() {
   const {
@@ -14,56 +14,64 @@ export function IncidentsPage() {
     getIncident,
     updateIncident,
     loading,
-  } = useIncidentStore()
+  } = useIncidentStore();
 
-  const [actionLoading, setActionLoading] = useState(false)
+  const [actionLoading, setActionLoading] = useState(false);
 
-  const filteredIncidents = getFilteredIncidents()
-  const selectedIncident = selectedIncidentId ? getIncident(selectedIncidentId) : null
+  const filteredIncidents = getFilteredIncidents();
+  const selectedIncident = selectedIncidentId
+    ? getIncident(selectedIncidentId)
+    : null;
 
   const handleAcknowledge = async () => {
-    if (!selectedIncident) return
+    if (!selectedIncident) return;
 
-    const originalIncident = selectedIncident
-    const optimisticIncident = { ...selectedIncident, status: 'acknowledged' as const }
+    const originalIncident = selectedIncident;
+    const optimisticIncident = {
+      ...selectedIncident,
+      status: 'acknowledged' as const,
+    };
 
-    updateIncident(optimisticIncident)
-    setActionLoading(true)
+    updateIncident(optimisticIncident);
+    setActionLoading(true);
 
     try {
-      const updated = await acknowledgeIncident(selectedIncident.id)
-      updateIncident(updated)
-      showSuccessToast('Incident acknowledged')
+      const updated = await acknowledgeIncident(selectedIncident.id);
+      updateIncident(updated);
+      showSuccessToast('Incident acknowledged');
     } catch (err) {
-      updateIncident(originalIncident)
-      showErrorToast('Failed to acknowledge incident')
-      console.error('Failed to acknowledge:', err)
+      updateIncident(originalIncident);
+      showErrorToast('Failed to acknowledge incident');
+      console.error('Failed to acknowledge:', err);
     } finally {
-      setActionLoading(false)
+      setActionLoading(false);
     }
-  }
+  };
 
   const handleResolve = async () => {
-    if (!selectedIncident) return
+    if (!selectedIncident) return;
 
-    const originalIncident = selectedIncident
-    const optimisticIncident = { ...selectedIncident, status: 'resolved' as const }
+    const originalIncident = selectedIncident;
+    const optimisticIncident = {
+      ...selectedIncident,
+      status: 'resolved' as const,
+    };
 
-    updateIncident(optimisticIncident)
-    setActionLoading(true)
+    updateIncident(optimisticIncident);
+    setActionLoading(true);
 
     try {
-      const updated = await resolveIncident(selectedIncident.id)
-      updateIncident(updated)
-      showSuccessToast('Incident resolved')
+      const updated = await resolveIncident(selectedIncident.id);
+      updateIncident(updated);
+      showSuccessToast('Incident resolved');
     } catch (err) {
-      updateIncident(originalIncident)
-      showErrorToast('Failed to resolve incident')
-      console.error('Failed to resolve:', err)
+      updateIncident(originalIncident);
+      showErrorToast('Failed to resolve incident');
+      console.error('Failed to resolve:', err);
     } finally {
-      setActionLoading(false)
+      setActionLoading(false);
     }
-  }
+  };
 
   return (
     <div className="flex flex-col h-full bg-white overflow-hidden">
@@ -90,7 +98,7 @@ export function IncidentsPage() {
                     isSelected={incident.id === selectedIncidentId}
                     onClick={() =>
                       setSelectedIncidentId(
-                        incident.id === selectedIncidentId ? null : incident.id
+                        incident.id === selectedIncidentId ? null : incident.id,
                       )
                     }
                   />
@@ -111,5 +119,5 @@ export function IncidentsPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

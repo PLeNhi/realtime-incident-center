@@ -1,5 +1,5 @@
-import { useToastStore, type ToastType } from '@/store/toasts'
-import { X } from 'lucide-react'
+import { useToastStore, type ToastType } from '@/store/toasts';
+import { X } from 'lucide-react';
 
 function getToastStyle(type: ToastType) {
   const styles = {
@@ -7,8 +7,8 @@ function getToastStyle(type: ToastType) {
     error: 'bg-red-50 border-red-200 text-red-800',
     info: 'bg-blue-50 border-blue-200 text-blue-800',
     warning: 'bg-amber-50 border-amber-200 text-amber-800',
-  }
-  return styles[type]
+  };
+  return styles[type];
 }
 
 function getIconStyle(type: ToastType) {
@@ -17,25 +17,25 @@ function getIconStyle(type: ToastType) {
     error: 'text-red-600',
     info: 'text-blue-600',
     warning: 'text-amber-600',
-  }
-  return styles[type]
+  };
+  return styles[type];
 }
 
 function getIcon(type: ToastType) {
   switch (type) {
     case 'success':
-      return '✓'
+      return '✓';
     case 'error':
-      return '✕'
+      return '✕';
     case 'info':
-      return 'ℹ'
+      return 'ℹ';
     case 'warning':
-      return '⚠'
+      return '⚠';
   }
 }
 
 export function ToastContainer() {
-  const { toasts, removeToast } = useToastStore()
+  const { toasts, removeToast } = useToastStore();
 
   return (
     <div className="fixed bottom-4 right-4 z-50 space-y-2 max-w-sm">
@@ -43,10 +43,12 @@ export function ToastContainer() {
         <div
           key={toast.id}
           className={`flex items-start gap-3 p-4 rounded-lg border animate-in fade-in slide-in-from-bottom-4 duration-300 ${getToastStyle(
-            toast.type
+            toast.type,
           )}`}
         >
-          <span className={`text-lg font-semibold flex-shrink-0 ${getIconStyle(toast.type)}`}>
+          <span
+            className={`text-lg font-semibold flex-shrink-0 ${getIconStyle(toast.type)}`}
+          >
             {getIcon(toast.type)}
           </span>
           <p className="text-sm font-medium flex-1">{toast.message}</p>
@@ -59,5 +61,5 @@ export function ToastContainer() {
         </div>
       ))}
     </div>
-  )
+  );
 }

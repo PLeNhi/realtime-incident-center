@@ -1,8 +1,12 @@
-import type { IncidentEvent } from '@/types'
-import { formatRelativeTime, labelForEventType, emojiForEventType } from '@/lib/time'
+import type { IncidentEvent } from '@/types';
+import {
+  formatRelativeTime,
+  labelForEventType,
+  emojiForEventType,
+} from '@/lib/time';
 
 interface TimelineProps {
-  events: IncidentEvent[]
+  events: IncidentEvent[];
 }
 
 export function Timeline({ events }: TimelineProps) {
@@ -11,7 +15,7 @@ export function Timeline({ events }: TimelineProps) {
       <div className="text-center py-8 text-gray-500">
         <p className="text-sm">No timeline events yet</p>
       </div>
-    )
+    );
   }
 
   return (
@@ -20,7 +24,9 @@ export function Timeline({ events }: TimelineProps) {
         <div key={event.id} className="flex gap-3">
           {/* Timeline line and dot */}
           <div className="flex flex-col items-center">
-            <div className="text-base flex-shrink-0">{emojiForEventType(event.type)}</div>
+            <div className="text-base flex-shrink-0">
+              {emojiForEventType(event.type)}
+            </div>
             {index < events.length - 1 && (
               <div className="w-0.5 h-8 bg-gray-200 my-1" />
             )}
@@ -43,5 +49,5 @@ export function Timeline({ events }: TimelineProps) {
         </div>
       ))}
     </div>
-  )
+  );
 }

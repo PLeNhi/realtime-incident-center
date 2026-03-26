@@ -30,6 +30,9 @@
       "cache": false,
       "interactive": true,
       "dependsOn": ["build"]
+    },
+    "format": {
+      "cache": false
     }
   }
 }

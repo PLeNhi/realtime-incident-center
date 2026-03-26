@@ -1,53 +1,62 @@
-import { create } from 'zustand'
-import type { Incident, IncidentStatus, Severity, IncidentEvent } from '@/types'
-import { orderBySeverity, orderByStatus } from '@/lib/time'
+import { create } from 'zustand';
+import type {
+  Incident,
+  IncidentStatus,
+  Severity,
+  IncidentEvent,
+} from '@/types';
+import { orderBySeverity, orderByStatus } from '@/lib/time';
 
-export type SocketStatus = 'connected' | 'reconnecting' | 'disconnected'
-export type SortOption = 'latest-updated' | 'newest-created' | 'severity' | 'status'
+export type SocketStatus = 'connected' | 'reconnecting' | 'disconnected';
+export type SortOption =
+  | 'latest-updated'
+  | 'newest-created'
+  | 'severity'
+  | 'status';
 
 interface IncidentStore {
-  incidents: Incident[]
-  setIncidents: (incidents: Incident[]) => void
-  addIncident: (incident: Incident) => void
-  updateIncident: (incident: Incident) => void
-  getIncident: (id: string) => Incident | undefined
-  
+  incidents: Incident[];
+  setIncidents: (incidents: Incident[]) => void;
+  addIncident: (incident: Incident) => void;
+  updateIncident: (incident: Incident) => void;
+  getIncident: (id: string) => Incident | undefined;
+
   // Loading state
-  loading: boolean
-  setLoading: (loading: boolean) => void
-  
+  loading: boolean;
+  setLoading: (loading: boolean) => void;
+
   // Filtering
-  searchTerm: string
-  setSearchTerm: (term: string) => void
-  severityFilter: Severity | null
-  setSeverityFilter: (severity: Severity | null) => void
-  statusFilter: IncidentStatus | null
-  setStatusFilter: (status: IncidentStatus | null) => void
-  serviceFilter: string | null
-  setServiceFilter: (service: string | null) => void
-  sortBy: SortOption
-  setSortBy: (sort: SortOption) => void
-  clearFilters: () => void
-  
+  searchTerm: string;
+  setSearchTerm: (term: string) => void;
+  severityFilter: Severity | null;
+  setSeverityFilter: (severity: Severity | null) => void;
+  statusFilter: IncidentStatus | null;
+  setStatusFilter: (status: IncidentStatus | null) => void;
+  serviceFilter: string | null;
+  setServiceFilter: (service: string | null) => void;
+  sortBy: SortOption;
+  setSortBy: (sort: SortOption) => void;
+  clearFilters: () => void;
+
   // Filtering helpers
-  getFilteredIncidents: () => Incident[]
-  getAvailableServices: () => string[]
-  
+  getFilteredIncidents: () => Incident[];
+  getAvailableServices: () => string[];
+
   // UI state
-  selectedIncidentId: string | null
-  setSelectedIncidentId: (id: string | null) => void
-  highlightedIncidentIds: Set<string>
-  addHighlightedIncident: (id: string) => void
-  removeHighlightedIncident: (id: string) => void
-  
+  selectedIncidentId: string | null;
+  setSelectedIncidentId: (id: string | null) => void;
+  highlightedIncidentIds: Set<string>;
+  addHighlightedIncident: (id: string) => void;
+  removeHighlightedIncident: (id: string) => void;
+
   // Events
-  events: IncidentEvent[]
-  addEvent: (event: IncidentEvent) => void
-  clearEvents: () => void
-  
+  events: IncidentEvent[];
+  addEvent: (event: IncidentEvent) => void;
+  clearEvents: () => void;
+
   // Socket state
-  socketStatus: SocketStatus
-  setSocketStatus: (status: SocketStatus) => void
+  socketStatus: SocketStatus;
+  setSocketStatus: (status: SocketStatus) => void;
 }
 
 export const useIncidentStore = create<IncidentStore>((set, get) => ({
@@ -60,7 +69,7 @@ export const useIncidentStore = create<IncidentStore>((set, get) => ({
   updateIncident: (incident) =>
     set((state) => ({
       incidents: state.incidents.map((inc) =>
-        inc.id === incident.id ? incident : inc
+        inc.id === incident.id ? incident : inc,
       ),
     })),
   getIncident: (id) => get().incidents.find((inc) => inc.id === id),
@@ -87,58 +96,64 @@ export const useIncidentStore = create<IncidentStore>((set, get) => ({
     }),
 
   getFilteredIncidents: () => {
-    const state = get()
-    let filtered = [...state.incidents]
+    const state = get();
+    let filtered = [...state.incidents];
 
     if (state.searchTerm) {
-      const term = state.searchTerm.toLowerCase()
+      const term = state.searchTerm.toLowerCase();
       filtered = filtered.filter(
         (inc) =>
           inc.title.toLowerCase().includes(term) ||
-          inc.description.toLowerCase().includes(term)
-      )
+          inc.description.toLowerCase().includes(term),
+      );
     }
 
     if (state.severityFilter) {
-      filtered = filtered.filter((inc) => inc.severity === state.severityFilter)
+      filtered = filtered.filter(
+        (inc) => inc.severity === state.severityFilter,
+      );
     }
 
     if (state.statusFilter) {
-      filtered = filtered.filter((inc) => inc.status === state.statusFilter)
+      filtered = filtered.filter((inc) => inc.status === state.statusFilter);
     }
 
     if (state.serviceFilter) {
-      filtered = filtered.filter((inc) => inc.service === state.serviceFilter)
+      filtered = filtered.filter((inc) => inc.service === state.serviceFilter);
     }
 
     // Apply sorting
     if (state.sortBy === 'latest-updated') {
       filtered.sort(
         (a, b) =>
-          new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
-      )
+          new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(),
+      );
     } else if (state.sortBy === 'newest-created') {
       filtered.sort(
         (a, b) =>
-          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-      )
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+      );
     } else if (state.sortBy === 'severity') {
-      filtered.sort((a, b) => orderBySeverity(a.severity) - orderBySeverity(b.severity))
+      filtered.sort(
+        (a, b) => orderBySeverity(a.severity) - orderBySeverity(b.severity),
+      );
     } else if (state.sortBy === 'status') {
-      filtered.sort((a, b) => orderByStatus(a.status) - orderByStatus(b.status))
+      filtered.sort(
+        (a, b) => orderByStatus(a.status) - orderByStatus(b.status),
+      );
     }
 
-    return filtered
+    return filtered;
   },
 
   getAvailableServices: () => {
-    const services = new Set(get().incidents.map((inc) => inc.service))
-    return Array.from(services).sort()
+    const services = new Set(get().incidents.map((inc) => inc.service));
+    return Array.from(services).sort();
   },
 
   selectedIncidentId: null,
   setSelectedIncidentId: (id) => set({ selectedIncidentId: id }),
-  
+
   highlightedIncidentIds: new Set(),
   addHighlightedIncident: (id) =>
     set((state) => ({
@@ -146,9 +161,9 @@ export const useIncidentStore = create<IncidentStore>((set, get) => ({
     })),
   removeHighlightedIncident: (id) =>
     set((state) => {
-      const newSet = new Set(state.highlightedIncidentIds)
-      newSet.delete(id)
-      return { highlightedIncidentIds: newSet }
+      const newSet = new Set(state.highlightedIncidentIds);
+      newSet.delete(id);
+      return { highlightedIncidentIds: newSet };
     }),
 
   events: [],
@@ -160,4 +175,4 @@ export const useIncidentStore = create<IncidentStore>((set, get) => ({
 
   socketStatus: 'disconnected',
   setSocketStatus: (status) => set({ socketStatus: status }),
-}))
+}));

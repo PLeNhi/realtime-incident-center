@@ -1,5 +1,5 @@
-import { useIncidentStore, type SortOption } from '@/store'
-import type { Severity, IncidentStatus } from '@/types'
+import { useIncidentStore, type SortOption } from '@/store';
+import type { Severity, IncidentStatus } from '@/types';
 
 export function FilterBar() {
   const {
@@ -16,11 +16,11 @@ export function FilterBar() {
     clearFilters,
     getAvailableServices,
     incidents,
-  } = useIncidentStore()
+  } = useIncidentStore();
 
-  const services = getAvailableServices()
+  const services = getAvailableServices();
   const hasActiveFilters =
-    searchTerm || severityFilter || statusFilter || serviceFilter
+    searchTerm || severityFilter || statusFilter || serviceFilter;
 
   return (
     <div className="bg-white border-b border-gray-200 px-6 py-4 overflow-x-auto">
@@ -37,7 +37,9 @@ export function FilterBar() {
         {/* Severity Filter */}
         <select
           value={severityFilter || ''}
-          onChange={(e) => setSeverityFilter((e.target.value as Severity) || null)}
+          onChange={(e) =>
+            setSeverityFilter((e.target.value as Severity) || null)
+          }
           className="px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-400 focus:ring-offset-1 transition-all hover:border-gray-300 bg-white"
         >
           <option value="">All Severities</option>
@@ -50,7 +52,9 @@ export function FilterBar() {
         {/* Status Filter */}
         <select
           value={statusFilter || ''}
-          onChange={(e) => setStatusFilter((e.target.value as IncidentStatus) || null)}
+          onChange={(e) =>
+            setStatusFilter((e.target.value as IncidentStatus) || null)
+          }
           className="px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-400 focus:ring-offset-1 transition-all hover:border-gray-300 bg-white"
         >
           <option value="">All Statuses</option>
@@ -105,5 +109,5 @@ export function FilterBar() {
         <div className="text-sm text-gray-500">No incidents found</div>
       )}
     </div>
-  )
+  );
 }

@@ -1,13 +1,18 @@
-import React from 'react'
-import type { Incident } from '@/types'
-import { getStatusColor, getStatusLabel, getSeverityLabel, getSeverityBadgeColor } from '@/lib/utils'
-import { formatCompactRelativeTime } from '@/lib/time'
-import { useIncidentStore } from '@/store'
+import React from 'react';
+import type { Incident } from '@/types';
+import {
+  getStatusColor,
+  getStatusLabel,
+  getSeverityLabel,
+  getSeverityBadgeColor,
+} from '@/lib/utils';
+import { formatCompactRelativeTime } from '@/lib/time';
+import { useIncidentStore } from '@/store';
 
 interface IncidentItemProps {
-  incident: Incident
-  isSelected: boolean
-  onClick: () => void
+  incident: Incident;
+  isSelected: boolean;
+  onClick: () => void;
 }
 
 export function IncidentItem({
@@ -15,8 +20,8 @@ export function IncidentItem({
   isSelected,
   onClick,
 }: IncidentItemProps) {
-  const { highlightedIncidentIds } = useIncidentStore()
-  const isHighlighted = highlightedIncidentIds.has(incident.id)
+  const { highlightedIncidentIds } = useIncidentStore();
+  const isHighlighted = highlightedIncidentIds.has(incident.id);
 
   return (
     <div
@@ -36,12 +41,14 @@ export function IncidentItem({
       </div>
 
       <div className="flex items-center gap-2 mb-3 flex-wrap">
-        <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded border ${getSeverityBadgeColor(incident.severity)}`}>
+        <span
+          className={`inline-flex px-2 py-1 text-xs font-semibold rounded border ${getSeverityBadgeColor(incident.severity)}`}
+        >
           {getSeverityLabel(incident.severity)}
         </span>
         <span
           className={`inline-flex px-2 py-1 text-xs font-semibold rounded border ${getStatusColor(
-            incident.status
+            incident.status,
           )}`}
         >
           {getStatusLabel(incident.status)}
@@ -52,8 +59,10 @@ export function IncidentItem({
       </div>
 
       <div className="flex items-center justify-between text-xs text-gray-500">
-        <span className="font-medium">{formatCompactRelativeTime(incident.updatedAt)}</span>
+        <span className="font-medium">
+          {formatCompactRelativeTime(incident.updatedAt)}
+        </span>
       </div>
     </div>
-  )
+  );
 }

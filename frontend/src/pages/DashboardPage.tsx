@@ -1,11 +1,11 @@
-import { StatsCards } from '@/components/StatsCards'
-import { IncidentTrendChart } from '@/components/IncidentTrendChart'
-import { IncidentBySeverityChart } from '@/components/IncidentBySeverityChart'
-import { generateTrendData, generateSeverityData } from '@/lib/charts'
-import { useIncidentStore } from '@/store'
+import { StatsCards } from '@/components/StatsCards';
+import { IncidentTrendChart } from '@/components/IncidentTrendChart';
+import { IncidentBySeverityChart } from '@/components/IncidentBySeverityChart';
+import { generateTrendData, generateSeverityData } from '@/lib/charts';
+import { useIncidentStore } from '@/store';
 
 export function DashboardPage() {
-  const { incidents } = useIncidentStore()
+  const { incidents } = useIncidentStore();
 
   return (
     <div className="flex flex-col h-full bg-amber-50 overflow-y-auto">
@@ -24,7 +24,9 @@ export function DashboardPage() {
       {/* Summary Stats in bottom section */}
       {incidents.length > 0 && (
         <div className="px-6 py-6 bg-white border-t border-gray-200">
-          <h3 className="text-sm font-semibold text-gray-900 mb-4 uppercase tracking-wide">Quick Stats</h3>
+          <h3 className="text-sm font-semibold text-gray-900 mb-4 uppercase tracking-wide">
+            Quick Stats
+          </h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="text-center p-3 rounded-lg bg-amber-50">
               <p className="text-xs text-gray-600 mb-1">Avg Response Time</p>
@@ -36,7 +38,9 @@ export function DashboardPage() {
             </div>
             <div className="text-center p-3 rounded-lg bg-amber-50">
               <p className="text-xs text-gray-600 mb-1">P1 Incidents</p>
-              <p className="text-2xl font-bold text-red-600">{incidents.filter(i => i.severity === 'critical').length}</p>
+              <p className="text-2xl font-bold text-red-600">
+                {incidents.filter((i) => i.severity === 'critical').length}
+              </p>
             </div>
             <div className="text-center p-3 rounded-lg bg-amber-50">
               <p className="text-xs text-gray-600 mb-1">Uptime</p>
@@ -46,5 +50,5 @@ export function DashboardPage() {
         </div>
       )}
     </div>
-  )
+  );
 }

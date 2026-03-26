@@ -1,15 +1,20 @@
-import { useIncidentStore } from '@/store'
-import type { Incident } from '@/types'
-import { getStatusColor, getStatusLabel, getSeverityLabel, getSeverityBadgeColor } from '@/lib/utils'
-import { formatRelativeTime } from '@/lib/time'
-import { Timeline } from '@/components/Timeline'
-import { formatDistanceToNow, format } from 'date-fns'
+import { useIncidentStore } from '@/store';
+import type { Incident } from '@/types';
+import {
+  getStatusColor,
+  getStatusLabel,
+  getSeverityLabel,
+  getSeverityBadgeColor,
+} from '@/lib/utils';
+import { formatRelativeTime } from '@/lib/time';
+import { Timeline } from '@/components/Timeline';
+import { formatDistanceToNow, format } from 'date-fns';
 
 interface IncidentDetailProps {
-  incident?: Incident | null
-  onAcknowledge?: () => void
-  onResolve?: () => void
-  isLoading?: boolean
+  incident?: Incident | null;
+  onAcknowledge?: () => void;
+  onResolve?: () => void;
+  isLoading?: boolean;
 }
 
 export function IncidentDetail({
@@ -18,21 +23,24 @@ export function IncidentDetail({
   onResolve,
   isLoading = false,
 }: IncidentDetailProps) {
-  const { events } = useIncidentStore()
+  const { events } = useIncidentStore();
 
   if (!incident) {
     return (
       <div className="flex items-center justify-center h-full bg-white">
         <div className="text-center">
-          <p className="text-gray-500 text-sm">Select an incident to view details</p>
+          <p className="text-gray-500 text-sm">
+            Select an incident to view details
+          </p>
         </div>
       </div>
-    )
+    );
   }
 
-  const canAcknowledge = incident.status === 'open'
-  const canResolve = incident.status === 'open' || incident.status === 'acknowledged'
-  const incidentEvents = events.filter(e => e.incidentId === incident.id)
+  const canAcknowledge = incident.status === 'open';
+  const canResolve =
+    incident.status === 'open' || incident.status === 'acknowledged';
+  const incidentEvents = events.filter((e) => e.incidentId === incident.id);
 
   return (
     <div className="flex flex-col h-full bg-white">
@@ -42,12 +50,14 @@ export function IncidentDetail({
           {incident.title}
         </h2>
         <div className="flex items-center gap-2 flex-wrap">
-          <span className={`inline-flex px-2.5 py-1 text-xs font-semibold rounded border ${getSeverityBadgeColor(incident.severity)}`}>
+          <span
+            className={`inline-flex px-2.5 py-1 text-xs font-semibold rounded border ${getSeverityBadgeColor(incident.severity)}`}
+          >
             {getSeverityLabel(incident.severity)}
           </span>
           <span
             className={`inline-flex px-2.5 py-1 text-xs font-semibold rounded border ${getStatusColor(
-              incident.status
+              incident.status,
             )}`}
           >
             {getStatusLabel(incident.status)}
@@ -59,32 +69,48 @@ export function IncidentDetail({
       <div className="flex-1 overflow-y-auto p-6 space-y-6">
         {/* Description */}
         <div>
-          <h3 className="text-sm font-semibold text-gray-900 mb-2 uppercase tracking-wide">Description</h3>
-          <p className="text-sm text-gray-700 leading-relaxed">{incident.description}</p>
+          <h3 className="text-sm font-semibold text-gray-900 mb-2 uppercase tracking-wide">
+            Description
+          </h3>
+          <p className="text-sm text-gray-700 leading-relaxed">
+            {incident.description}
+          </p>
         </div>
 
         {/* Details Grid */}
         <div className="grid grid-cols-2 gap-4 pb-4 border-b border-gray-200">
           <div>
-            <p className="text-xs font-semibold text-gray-600 mb-1 uppercase tracking-wide">Service</p>
-            <p className="text-sm font-medium text-gray-900">{incident.service}</p>
+            <p className="text-xs font-semibold text-gray-600 mb-1 uppercase tracking-wide">
+              Service
+            </p>
+            <p className="text-sm font-medium text-gray-900">
+              {incident.service}
+            </p>
           </div>
           <div>
-            <p className="text-xs font-semibold text-gray-600 mb-1 uppercase tracking-wide">Severity</p>
+            <p className="text-xs font-semibold text-gray-600 mb-1 uppercase tracking-wide">
+              Severity
+            </p>
             <p className="text-sm font-medium text-gray-900">
               {getSeverityLabel(incident.severity)}
             </p>
           </div>
           <div>
-            <p className="text-xs font-semibold text-gray-600 mb-1 uppercase tracking-wide">Status</p>
+            <p className="text-xs font-semibold text-gray-600 mb-1 uppercase tracking-wide">
+              Status
+            </p>
             <p className="text-sm font-medium text-gray-900">
               {getStatusLabel(incident.status)}
             </p>
           </div>
           {incident.owner && (
             <div>
-              <p className="text-xs font-semibold text-gray-600 mb-1 uppercase tracking-wide">Owner</p>
-              <p className="text-sm font-medium text-gray-900">{incident.owner}</p>
+              <p className="text-xs font-semibold text-gray-600 mb-1 uppercase tracking-wide">
+                Owner
+              </p>
+              <p className="text-sm font-medium text-gray-900">
+                {incident.owner}
+              </p>
             </div>
           )}
         </div>
@@ -92,7 +118,9 @@ export function IncidentDetail({
         {/* Timestamps */}
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <p className="text-xs font-semibold text-gray-600 mb-1 uppercase tracking-wide">Created</p>
+            <p className="text-xs font-semibold text-gray-600 mb-1 uppercase tracking-wide">
+              Created
+            </p>
             <p className="text-xs text-gray-700">
               {format(new Date(incident.createdAt), 'MMM d, yyyy HH:mm:ss')}
             </p>
@@ -101,7 +129,9 @@ export function IncidentDetail({
             </p>
           </div>
           <div>
-            <p className="text-xs font-semibold text-gray-600 mb-1 uppercase tracking-wide">Updated</p>
+            <p className="text-xs font-semibold text-gray-600 mb-1 uppercase tracking-wide">
+              Updated
+            </p>
             <p className="text-xs text-gray-700">
               {formatDistanceToNow(new Date(incident.updatedAt), {
                 addSuffix: true,
@@ -116,7 +146,9 @@ export function IncidentDetail({
         {/* Timeline Section */}
         {incidentEvents.length > 0 && (
           <div className="pt-4 border-t border-gray-200">
-            <h3 className="text-sm font-semibold text-gray-900 mb-4 uppercase tracking-wide">Timeline</h3>
+            <h3 className="text-sm font-semibold text-gray-900 mb-4 uppercase tracking-wide">
+              Timeline
+            </h3>
             <Timeline events={incidentEvents} />
           </div>
         )}
@@ -124,8 +156,12 @@ export function IncidentDetail({
         {/* Metric */}
         {incident.metric && (
           <div className="pt-2">
-            <p className="text-xs font-semibold text-gray-600 mb-1 uppercase tracking-wide">Affected Component</p>
-            <p className="text-sm font-medium text-gray-900">{incident.metric}</p>
+            <p className="text-xs font-semibold text-gray-600 mb-1 uppercase tracking-wide">
+              Affected Component
+            </p>
+            <p className="text-sm font-medium text-gray-900">
+              {incident.metric}
+            </p>
           </div>
         )}
       </div>
@@ -156,5 +192,5 @@ export function IncidentDetail({
         </button>
       </div>
     </div>
-  )
+  );
 }

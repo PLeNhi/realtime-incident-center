@@ -3,10 +3,8 @@
  */
 export function SkeletonLoader({ className = '' }: { className?: string }) {
   return (
-    <div
-      className={`bg-gray-200 rounded-lg animate-pulse ${className}`}
-    />
-  )
+    <div className={`bg-gray-200 rounded-lg animate-pulse ${className}`} />
+  );
 }
 
 /**
@@ -18,7 +16,7 @@ export function StatsCardSkeleton() {
       <SkeletonLoader className="h-3 w-24 mb-3" />
       <SkeletonLoader className="h-8 w-16" />
     </div>
-  )
+  );
 }
 
 /**
@@ -36,7 +34,7 @@ export function IncidentItemSkeleton() {
       </div>
       <SkeletonLoader className="h-4 w-32" />
     </div>
-  )
+  );
 }
 
 /**
@@ -63,5 +61,5 @@ export function DetailPanelSkeleton() {
         </div>
       </div>
     </div>
-  )
+  );
 }
