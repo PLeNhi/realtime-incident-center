@@ -1,4 +1,4 @@
-import { Incident, Severity, IncidentStatus } from './types.js'
+import { Incident, IncidentStatus, Severity } from "../types"
 
 const SERVICES = ['API Gateway', 'Auth Service', 'Database', 'Cache', 'Message Queue', 'Web Server']
 const SEVERITIES: Severity[] = ['critical', 'high', 'medium', 'low']
