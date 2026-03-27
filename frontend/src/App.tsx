@@ -6,6 +6,7 @@ import { Header } from '@/components/Header';
 import { ToastContainer } from '@/components/ToastContainer';
 import { DashboardPage } from '@/pages/DashboardPage';
 import { IncidentsPage } from '@/pages/IncidentsPage';
+import { CriticalBadge } from './components/CriticalBadge';
 
 export function App() {
   const { setIncidents, setLoading } = useIncidentStore();
@@ -68,16 +69,19 @@ export function App() {
           >
             📊 Dashboard
           </button>
-          <button
-            onClick={() => setCurrentPage('incidents')}
-            className={`py-4 px-2 font-medium text-sm transition-colors border-b-2 ${
-              currentPage === 'incidents'
-                ? 'text-orange-600 border-orange-500'
-                : 'text-gray-600 border-transparent hover:text-gray-900'
-            }`}
-          >
-            🚨 Incidents
-          </button>
+          <div className='related '>
+            <button
+              onClick={() => setCurrentPage('incidents')}
+              className={`py-4 px-2 font-medium text-sm transition-colors border-b-2 ${
+                currentPage === 'incidents'
+                  ? 'text-orange-600 border-orange-500'
+                  : 'text-gray-600 border-transparent hover:text-gray-900'
+              }`}
+            >
+              🚨 Incidents
+            </button>
+            <CriticalBadge/>
+          </div>
         </div>
       </div>
 

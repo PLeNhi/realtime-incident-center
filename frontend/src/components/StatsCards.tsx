@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { useIncidentStore } from '@/store';
 import { getCountByStatus, getCountBySeverity } from '@/lib/utils';
 
